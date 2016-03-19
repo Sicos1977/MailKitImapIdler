@@ -58,7 +58,7 @@ namespace MailKitImapIdler
             using (var outputStream = File.OpenWrite(@"d:\connectionmanager.txt"))
             using (_connectionManager = new ConnectionManager(outputStream, 10))
             {
-                _connectionManager.AddImapConnection("username@example.com", "paswoord", "imap.example.nl", 993,
+                _connectionManager.AddImapConnection("username@example.com", "password", "imap.example.nl", 993,
                     SecureSocketOptions.Auto, "INBOX", SearchQuery.NotSeen, @"d:\somefolder", 300);
 
                 _connectionManager.Start();
