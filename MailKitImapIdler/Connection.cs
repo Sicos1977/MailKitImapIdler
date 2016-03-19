@@ -113,7 +113,7 @@ namespace MailKitImapIdler
         public int IdleOrNopInterval { get; internal set; }
 
         /// <summary>
-        ///     The interval in seconds to use when checking for the arival of new e-mails.
+        ///     The interval in seconds to use when checking for the arrival of new e-mails.
         /// </summary>
         /// <remarks>
         ///     This property is only used when the mail server does not support
@@ -227,7 +227,7 @@ namespace MailKitImapIdler
         ///     or <see cref="MailKit.Net.Imap.ImapClient.NoOpAsync" /> mode before resending these commands to the mail server
         /// </param>
         /// <param name="mailPollingInterval">
-        ///     The interval in seconds to use when checking for the arival of new e-mails.
+        ///     The interval in seconds to use when checking for the arrival of new e-mails.
         ///     This parameter is only used when the mail server does not support
         ///     <see cref="MailKit.Net.Imap.ImapClient.IdleAsync" /> mode
         /// </param>
@@ -282,7 +282,7 @@ namespace MailKitImapIdler
         ///     The interval in seconds to use when the connection is in <see cref="Pop3Client.NoOpAsync" />
         ///     or <see cref="Pop3Client.NoOpAsync" /> mode before resending these commands to the mail server
         /// </param>
-        /// <param name="mailPollingInterval">The interval in seconds to use when checking for the arival of new e-mails</param>
+        /// <param name="mailPollingInterval">The interval in seconds to use when checking for the arrival of new e-mails</param>
         internal Connection(string userName,
             string password,
             string host,

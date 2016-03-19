@@ -86,7 +86,7 @@ namespace MailKitImapIdler
         private volatile bool _running;
 
         /// <summary>
-        ///     Used to keep track of all the connections we are monitoring
+        ///     Used to keep track of all the connections that we are monitoring
         /// </summary>
         private readonly List<Connection> _connections = new List<Connection>();
 
@@ -98,8 +98,7 @@ namespace MailKitImapIdler
 
         /// <summary>
         ///     Used to signal the <see cref="MessageProcessingTaskManager" /> method from the <see cref="ConnectionWorker" />
-        ///     method
-        ///     that a new e-mail has arrived for a <see cref="Connection" />
+        ///     method that a new e-mail has arrived for a <see cref="Connection" />
         /// </summary>
         private readonly AutoResetEvent _newMailTrigger = new AutoResetEvent(false);
 
@@ -109,7 +108,7 @@ namespace MailKitImapIdler
         private bool _disposed;
 
         /// <summary>
-        ///     Used to keep track of all the worker task we are starting
+        ///     Used to keep track of all the worker tasks we are starting
         /// </summary>
         private List<Task> _workerTasks;
 
@@ -124,7 +123,7 @@ namespace MailKitImapIdler
         private static Stream _logStream;
 
         /// <summary>
-        ///     If set then very detailed logging will be written
+        ///     When set then very detailed logging will be written
         /// </summary>
         /// <remarks>
         ///     Only use this when needed because this will slowdown the processing of e-mails
@@ -166,10 +165,10 @@ namespace MailKitImapIdler
         /// <summary>
         ///     Add's a new IMAP connection
         /// </summary>
-        /// <param name="userName">The mail server user name</param>
+        /// <param name="userName">The mail server username</param>
         /// <param name="password">The password for the <paramref name="userName" /></param>
-        /// <param name="host">The host name from the mail server</param>
-        /// <param name="port">The port from the mail server</param>
+        /// <param name="host">The mail server hostname</param>
+        /// <param name="port">The mail server port</param>
         /// <param name="options">The <see cref="SecureSocketOptions" /> to use when connecting the mail server</param>
         /// <param name="folderName">the mail server folder to use, standard INBOX</param>
         /// <param name="searchQuery">The <see cref="SearchQuery" /> to use when reading (selecting) e-mail</param>
@@ -179,12 +178,11 @@ namespace MailKitImapIdler
         ///     or <see cref="ImapClient.NoOpAsync" /> mode before resending these commands to the mail server
         /// </param>
         /// <param name="mailPollingInterval">
-        ///     The interval in seconds to use when checking for the arival of new e-mails.
+        ///     The interval in seconds to use when checking for the arrival of new e-mails.
         ///     This parameter is only used when the mail server does not support <see cref="ImapClient.IdleAsync" /> mode
         /// </param>
         /// <param name="postProcessing">
-        ///     The actions that need to be done after an messages has been retrieved from
-        ///     a <see cref="Connection" />
+        ///     The actions that need to be done after an messages has been retrieved from a <see cref="Connection" />
         /// </param>
         /// <param name="destinationFolderName">
         ///     The mail server folder where processed messages are moved to when the <paramref name="postProcessing" />
@@ -255,10 +253,10 @@ namespace MailKitImapIdler
         /// <summary>
         ///     Add's a new POP3 connection
         /// </summary>
-        /// <param name="userName">The mail server user name</param>
+        /// <param name="userName">The mail server username</param>
         /// <param name="password">The password for the <paramref name="userName" /></param>
-        /// <param name="host">The host name from the mail server</param>
-        /// <param name="port">The port from the mail server</param>
+        /// <param name="host">The mail server hostname</param>
+        /// <param name="port">The mail server port</param>
         /// <param name="options">The <see cref="SecureSocketOptions" /> to use when connecting the mail server</param>
         /// <param name="outputDirectory">The path where the recieved e-mails will be written</param>
         /// <param name="noOpInterval">
@@ -266,7 +264,7 @@ namespace MailKitImapIdler
         ///     or <see cref="Pop3Client.NoOpAsync" /> mode before resending these commands to the mail server
         /// </param>
         /// <param name="mailPollingInterval">
-        ///     The interval in seconds to use when checking for the arival of new e-mails.
+        ///     The interval in seconds to use when checking for the arrival of new e-mails.
         ///     This parameter is only used when the mail server does not support <see cref="ImapClient.IdleAsync" /> mode
         /// </param>
         public void AddPop3Connection(
@@ -334,7 +332,7 @@ namespace MailKitImapIdler
 
         #region ConnectionWorker
         /// <summary>
-        ///     This method will start up and maintain all the added <see cref="_connections" />
+        ///     This method will startup and maintain all the added <see cref="_connections" />
         /// </summary>
         private void ConnectionWorker()
         {
@@ -425,7 +423,7 @@ namespace MailKitImapIdler
                                 WriteLineToLogStream("... opened");
 
                                 // The first time we open a folder we always must check for new messages because
-                                // in idle mode event are only generated when something changes in the folder
+                                // in idle mode events are only generated when something changes in the folder
                                 if (connection.CanIdle)
                                     CheckForNewMessages(connection);
                             }
@@ -462,8 +460,7 @@ namespace MailKitImapIdler
         #region MessageProcessingTaskManager
         /// <summary>
         ///     This method monitors the <see cref="_connectionProcessingQueue" /> for newly added <see cref="Connection" />
-        ///     objects.
-        ///     When an object is added the method tries to dequeue the object and then starts a new
+        ///     objects. When an object is added the method tries to dequeue the object and then starts a new
         ///     <see cref="ImapMessageProcessingTask" />
         /// </summary>
         private void MessageProcessingTaskManager()
@@ -574,10 +571,8 @@ namespace MailKitImapIdler
                             switch (connection.PostProcessing)
                             {
                                 case PostProcessing.DeleteFromFolder:
-                                    folder.SetFlags(uniqueId, MessageFlags.Seen, true);
-                                    WriteLineToLogStream("{0} - Message with folder id {1} flagged as SEEN", info, uniqueId);
-                                    folder.SetFlags(uniqueId, MessageFlags.Deleted, true);
-                                    WriteLineToLogStream("{0} - Message with folder id {1} flagged as DELETED", info, uniqueId);
+                                    folder.AddFlags(uniqueId, MessageFlags.Seen | MessageFlags.Deleted, true);
+                                    WriteLineToLogStream("{0} - Message with folder id {1} flagged as SEEN and DELETED", info, uniqueId);
                                     break;
 
                                 case PostProcessing.MoveToFolder:
@@ -585,14 +580,14 @@ namespace MailKitImapIdler
                                     break;
 
                                 case PostProcessing.FlagAsSeenAndMoveToFolder:
-                                    folder.SetFlags(uniqueId, MessageFlags.Seen, true);
+                                    folder.AddFlags(uniqueId, MessageFlags.Seen, true);
                                     WriteLineToLogStream("{0} - Message with folder id {1} flagged as SEEN", info, uniqueId);
                                     folder.MoveTo(uniqueId, destinationFolder);
                                     WriteLineToLogStream("{0} - Message with folder id {1} moved to {2}", info, uniqueId, connection.DestinationFolderName);
                                     break;
 
                                 case PostProcessing.FlagAsSeen:
-                                    folder.SetFlags(uniqueId, MessageFlags.Seen, true);
+                                    folder.AddFlags(uniqueId, MessageFlags.Seen, true);
                                     WriteLineToLogStream("{0} - Message with folder id {1} flagged as SEEN", info, uniqueId);
                                     break;
 
@@ -884,7 +879,7 @@ namespace MailKitImapIdler
 
         #region Stop
         /// <summary>
-        ///     Stops all the <see cref="Connection" />'s and calls the <see cref="Dispose" /> method
+        ///     Stops all the <see cref="_connections" /> and calls the <see cref="Dispose" /> method
         /// </summary>
         public void Stop()
         {
@@ -896,7 +891,7 @@ namespace MailKitImapIdler
         #region Dispose
         /// <summary>
         ///     Disconnects all the open <see cref="ImapClient" /> or <see cref="Pop3Client" />
-        ///     connections and releases all the used resources
+        ///     <see cref="_connections"/> and releases all the used resources
         /// </summary>
         public void Dispose()
         {
@@ -949,7 +944,7 @@ namespace MailKitImapIdler
 
         #region MessagesArrived
         /// <summary>
-        ///     This method is fired when new messages arive in the monitored folder
+        ///     This method is fired when new messages arrive in the monitored folder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
