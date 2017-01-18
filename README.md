@@ -16,7 +16,7 @@ I tested this code with 40 mailboxes all in NOOP mode without any problems.
 License Information
 ====
 
-MailKitImapIdler is Copyright (C) 2016 Kees van Spelde. and is licensed under the MIT license:
+MailKitImapIdler is Copyright (C) 2016-2017 Kees van Spelde. and is licensed under the MIT license:
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
